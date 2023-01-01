@@ -77,23 +77,23 @@ export class CalcEventHandler {
     const subscription = await this.persistantSubscription();
 
     for await (const eventHandle of subscription) {
-      console.log(
-        "work handle",
-        eventHandle.event.type,
-        eventHandle.event.data
-      );
+      // console.log(
+      //   "work handle",
+      //   eventHandle.event.type,
+      //   eventHandle.event.data
+      // );
       await this.handleEvent(eventHandle?.event as any);
       await subscription.ack(eventHandle);
-      console.log("ack");
+      // console.log("ack");
     }
   }
 
   async handleEvent(event: CalcJobCreatedEvent): Promise<void> {
     const { jobId, input } = event.data;
 
-    // await this.sendJobStartedEvent(jobId);
-    // const output = factorial(input);
-    // await this.sendJobFinishedEvent(jobId, Number(output));
+    await this.sendJobStartedEvent(jobId);
+    const output = factorial(input);
+    await this.sendJobFinishedEvent(jobId, Number(output));
   }
 
   async sendJobStartedEvent(jobId: string) {

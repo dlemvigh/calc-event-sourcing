@@ -1,7 +1,12 @@
 import { jsonEvent } from '@eventstore/db-client';
 import { Injectable } from '@nestjs/common';
 
-import { CalcJobCreatedEvent, CalcJobCreatedEventType } from 'calc-shared';
+import {
+  CalcJobCreatedEvent,
+  CalcJobCreatedEventType,
+  // CalcJobRetryEvent,
+  // CalcJobRetryEventType,
+} from 'calc-shared';
 import { EventStoreProvider } from '../eventstore/eventstore.provider';
 
 @Injectable()
@@ -22,4 +27,18 @@ export class CalcJobService {
 
     return event.data;
   }
+
+  // async retryJob(jobId: string, retryAt: Date) {
+  //   const event = jsonEvent<CalcJobRetryEvent>({
+  //     type: CalcJobRetryEventType,
+  //     data: {
+  //       jobId,
+  //       retryAt,
+  //     },
+  //   });
+
+  //   await this.eventstore.client.appendToStream(jobId, event);
+
+  //   return event.data;
+  // }
 }

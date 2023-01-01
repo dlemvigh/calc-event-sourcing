@@ -1,8 +1,15 @@
-import { JSONEventType } from '@eventstore/db-client';
+import { JSONEventType } from "@eventstore/db-client";
 
-export const CalcJobCreatedEventType = 'CalcJobCreated';
-export const CalcJobStartedEventType = 'CalcJobStarted';
-export const CalcJobFinishedEventType = 'CalcJobFinished';
+export const CalcJobCreatedEventType = "CalcJobCreated";
+export const CalcJobStartedEventType = "CalcJobStarted";
+export const CalcJobFinishedEventType = "CalcJobFinished";
+// export const CalcJobRetryEventType = "CalcJobRetry";
+export const CalcJobEventTypes = [
+  CalcJobCreatedEventType,
+  CalcJobStartedEventType,
+  CalcJobFinishedEventType,
+  // CalcJobRetryEventType,
+];
 
 export type CalcJobCreatedEvent = JSONEventType<
   typeof CalcJobCreatedEventType,
@@ -30,7 +37,16 @@ export type CalcJobFinishedEvent = JSONEventType<
   }
 >;
 
+// export type CalcJobRetryEvent = JSONEventType<
+//   typeof CalcJobRetryEventType,
+//   {
+//     jobId: string;
+//     retryAt: string;
+//   }
+// >;
+
 export type CalcJobEvent =
   | CalcJobCreatedEvent
   | CalcJobStartedEvent
   | CalcJobFinishedEvent;
+// | CalcJobRetryEvent;

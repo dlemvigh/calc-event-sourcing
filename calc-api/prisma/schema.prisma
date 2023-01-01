@@ -8,9 +8,9 @@ datasource db {
 }
 
 model CalcJobResult {
-  id     String  @id @db.Uuid
-  input  BigInt
-  output BigInt?
+  id      String    @id @db.Uuid
+  input   BigInt
+  output  BigInt?
 }
 
 model CalcJobStatus {

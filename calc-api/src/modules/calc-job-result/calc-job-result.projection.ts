@@ -2,10 +2,8 @@ import { eventTypeFilter, START } from '@eventstore/db-client';
 import { Injectable } from '@nestjs/common';
 import {
   CalcJobCreatedEventType,
-  CalcJobStartedEventType,
   CalcJobFinishedEventType,
   CalcJobEvent,
-  CalcJobStartedEvent,
   CalcJobCreatedEvent,
   CalcJobFinishedEvent,
 } from 'calc-shared';
@@ -13,7 +11,7 @@ import { EventStoreProvider } from '../eventstore/eventstore.provider';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class CalcJobStatusProjection {
+export class CalcJobResultProjection {
   constructor(
     private readonly eventstore: EventStoreProvider,
     private readonly prisma: PrismaService,
@@ -27,11 +25,7 @@ export class CalcJobStatusProjection {
     const subscription = this.eventstore.client.subscribeToAll({
       fromPosition: START,
       filter: eventTypeFilter({
-        prefixes: [
-          CalcJobCreatedEventType,
-          CalcJobStartedEventType,
-          CalcJobFinishedEventType,
-        ],
+        prefixes: [CalcJobCreatedEventType, CalcJobFinishedEventType],
       }),
     });
 
@@ -43,28 +37,19 @@ export class CalcJobStatusProjection {
   async handleEvent(event: CalcJobEvent) {
     switch (event.type) {
       case CalcJobCreatedEventType: {
-        const { jobId, createdAt } = event.data as CalcJobCreatedEvent['data'];
-        await this.prisma.calcJobStatus.upsert({
+        const { jobId, input } = event.data as CalcJobCreatedEvent['data'];
+        await this.prisma.calcJobResult.upsert({
           where: { id: jobId },
-          create: { id: jobId, createdAt },
-          update: { createdAt },
-        });
-        break;
-      }
-      case CalcJobStartedEventType: {
-        const { jobId, startedAt } = event.data as CalcJobStartedEvent['data'];
-        await this.prisma.calcJobStatus.update({
-          where: { id: jobId },
-          data: { startedAt },
+          create: { id: jobId, input },
+          update: { input },
         });
         break;
       }
       case CalcJobFinishedEventType: {
-        const { jobId, finishedAt } =
-          event.data as CalcJobFinishedEvent['data'];
-        await this.prisma.calcJobStatus.update({
+        const { jobId, output } = event.data as CalcJobFinishedEvent['data'];
+        await this.prisma.calcJobResult.update({
           where: { id: jobId },
-          data: { finishedAt },
+          data: { output },
         });
         break;
       }

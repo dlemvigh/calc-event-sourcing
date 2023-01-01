@@ -12,7 +12,7 @@ import {
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
-import { CalcJobStatus } from '@prisma/client';
+import { CalcJobResult, CalcJobStatus } from '@prisma/client';
 import { IsNumber } from 'class-validator';
 import { v4 as uuid, NIL } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
@@ -36,9 +36,15 @@ export class CreateJobResponseBody {
   createdAt: Date;
 }
 
-export class CalcJobStatusViewModel implements CalcJobStatus {
+export class CalcJobViewModel {
   @ApiProperty({ example: NIL })
   id: string;
+
+  @ApiProperty({ example: 5 })
+  input: number;
+
+  @ApiProperty({ example: 120 })
+  output: number;
 
   @ApiProperty({ example: new Date(0).toISOString() })
   createdAt: Date;
@@ -59,15 +65,48 @@ export class CalcJobController {
   ) {}
 
   @Get('/job')
-  @ApiOkResponse({ type: [CalcJobStatusViewModel] })
+  @ApiOkResponse({ type: [CalcJobViewModel] })
   async getJobs() {
-    return this.prisma.calcJobStatus.findMany();
+    const results = await this.prisma.$queryRaw<CalcJobViewModel[]>`
+      SELECT *
+      FROM "CalcJobResult" result
+      LEFT JOIN "CalcJobStatus" status ON result.id = status.id      
+    `;
+
+    return results.map((result) => ({
+      ...result,
+      input: Number(result.input),
+      output: Number(result.output),
+    }));
   }
 
   @Get('/job/:id')
-  @ApiOkResponse({ type: [CalcJobStatusViewModel] })
-  async getJob(@Param('id', ParseUUIDPipe) id: string) {
-    return `TODO - get job status ${id}`;
+  @ApiOkResponse({ type: CalcJobViewModel })
+  async getJob(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<CalcJobViewModel> {
+    const [result, status] = await Promise.all([
+      this.prisma.calcJobResult.findUnique({ where: { id } }),
+      this.prisma.calcJobStatus.findUnique({ where: { id } }),
+    ]);
+
+    const model = this.toCalcJobViewModel(result, status);
+
+    return model;
+  }
+
+  private toCalcJobViewModel(
+    result: CalcJobResult,
+    status: CalcJobStatus,
+  ): CalcJobViewModel {
+    return {
+      id: result.id,
+      input: Number(result.input),
+      output: Number(result.output),
+      createdAt: status.createdAt,
+      startedAt: status.startedAt,
+      finishedAt: status.finishedAt,
+    };
   }
 
   @Post('/job')
@@ -86,4 +125,16 @@ export class CalcJobController {
       createdAt: event.createdAt,
     };
   }
+
+  // @Post('job/:id/retry')
+  // async retryJob(@Param('id', ParseUUIDPipe) id: string) {
+  //   const retryAt = new Date();
+
+  //   const event = await this.calcJobService.retryJob(id, retryAt);
+
+  //   return {
+  //     id: event.jobId,
+  //     retryAt: event.retryAt,
+  //   };
+  // }
 }
