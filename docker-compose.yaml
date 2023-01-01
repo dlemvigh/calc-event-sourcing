@@ -27,8 +27,8 @@ services:
     image: postgres:12.13-alpine
     restart: always
     environment:
-      POSTGRES_USERNAME: root
-      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
     volumes:
       - pg-data:/var/lib/postgresql/data
     ports:
