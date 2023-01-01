@@ -1,0 +1,8 @@
+{
+    "private": true,
+    "workspaces": [
+        "calc-api",
+        "calc-worker",
+        "calc-shared"
+    ]
+}

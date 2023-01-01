@@ -14,8 +14,10 @@ specifiers:
   '@types/jest': 29.2.4
   '@types/node': 18.11.18
   '@types/supertest': ^2.0.11
+  '@types/uuid': ^9.0.0
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
+  calc-shared: link:../calc-shared
   class-transformer: ^0.5.1
   class-validator: ^0.14.0
   eslint: ^8.0.1
@@ -33,6 +35,7 @@ specifiers:
   ts-node: ^10.0.0
   tsconfig-paths: 4.1.1
   typescript: ^4.7.4
+  uuid: ^9.0.0
 
 dependencies:
   '@eventstore/db-client': 5.0.0
@@ -41,10 +44,12 @@ dependencies:
   '@nestjs/platform-express': 9.2.1_hjcqpoaebdr7gdo5hgc22hthbe
   '@nestjs/swagger': 6.1.4_4fhhxyztwhblafku3krlstrun4
   '@prisma/client': 4.8.0_prisma@4.8.0
+  calc-shared: link:../calc-shared
   class-transformer: 0.5.1
   class-validator: 0.14.0
   reflect-metadata: 0.1.13
   rxjs: 7.8.0
+  uuid: 9.0.0
 
 devDependencies:
   '@nestjs/cli': 9.1.8
@@ -54,6 +59,7 @@ devDependencies:
   '@types/jest': 29.2.4
   '@types/node': 18.11.18
   '@types/supertest': 2.0.12
+  '@types/uuid': 9.0.0
   '@typescript-eslint/eslint-plugin': 5.47.1_axni7f4fgvh6tlufnh6hwgsifq
   '@typescript-eslint/parser': 5.47.1_iukboom6ndih5an6iafl45j2fe
   eslint: 8.31.0
@@ -1371,6 +1377,10 @@ packages:
     resolution: {integrity: sha512-X3HPWTwXRerBZS7Mo1k6vMVR1Z6zmJcDVn5O/31whe0tnjE4te6ZJSJGq1RiqHPjzPdMTfjCFogDJmwng9xHaQ==}
     dependencies:
       '@types/superagent': 4.1.16
+    dev: true
+
+  /@types/uuid/9.0.0:
+    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
     dev: true
 
   /@types/validator/13.7.10:

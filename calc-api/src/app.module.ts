@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './controllers/app.controller';
-import { UserController } from './controllers/user.controller';
-import { EventStoreProvider } from './providers/eventstore.provider';
-import { AppService } from './services/app.service';
-import { PrismaService } from './services/prisma.service';
-import { UserService } from './services/user.service';
+import { CalcJobStatusModule } from './modules/calc-job-status/calc-job-status.module';
+import { CalcJobModule } from './modules/calc-job/calc-job.module';
+import { EventStoreModule } from './modules/eventstore/eventstore.module';
+import { EventStoreProvider } from './modules/eventstore/eventstore.provider';
+import { PrismaModule } from './modules/prisma/prisma.module';
+import { PrismaService } from './modules/prisma/prisma.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController, UserController],
-  providers: [AppService, EventStoreProvider, UserService, PrismaService],
+  imports: [CalcJobModule, CalcJobStatusModule, EventStoreModule, PrismaModule],
+  providers: [PrismaService, EventStoreProvider],
 })
 export class AppModule {}
