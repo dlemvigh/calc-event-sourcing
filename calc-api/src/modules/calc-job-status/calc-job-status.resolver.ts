@@ -11,9 +11,4 @@ export class CalcJobStatusResolver {
   async status(@Args('id', ParseUUIDPipe) id: string) {
     return this.prisma.calcJobStatus.findUnique({ where: { id } });
   }
-
-  @Query(() => [CalcJobStatusModel])
-  async statuses() {
-    return this.prisma.calcJobStatus.findMany();
-  }
 }

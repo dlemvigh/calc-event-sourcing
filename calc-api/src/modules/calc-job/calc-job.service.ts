@@ -2,7 +2,6 @@ import { jsonEvent } from '@eventstore/db-client';
 import { Injectable } from '@nestjs/common';
 
 import {
-  CalcJobCreatedEvent,
   CalcJobCreatedEventType,
   // CalcJobRetryEvent,
   // CalcJobRetryEventType,
@@ -14,7 +13,7 @@ export class CalcJobService {
   constructor(private readonly eventstore: EventStoreProvider) {}
 
   async createJob(jobId: string, input: number, createdAt: Date) {
-    const event = jsonEvent<CalcJobCreatedEvent>({
+    const event = jsonEvent({
       type: CalcJobCreatedEventType,
       data: {
         jobId,
@@ -29,7 +28,7 @@ export class CalcJobService {
   }
 
   // async retryJob(jobId: string, retryAt: Date) {
-  //   const event = jsonEvent<CalcJobRetryEvent>({
+  //   const event = jsonEvent({
   //     type: CalcJobRetryEventType,
   //     data: {
   //       jobId,

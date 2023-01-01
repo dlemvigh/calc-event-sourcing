@@ -2,19 +2,15 @@ import {
   EventStoreDBClient,
   eventTypeFilter,
   EVENT_TYPE,
-  excludeSystemEvents,
   jsonEvent,
   PersistentSubscriptionExistsError,
   persistentSubscriptionToAllSettingsFromDefaults,
   START,
-  streamNameFilter,
 } from "@eventstore/db-client";
 import {
   CalcJobCreatedEvent,
   CalcJobCreatedEventType,
-  CalcJobFinishedEvent,
   CalcJobFinishedEventType,
-  CalcJobStartedEvent,
   CalcJobStartedEventType,
 } from "calc-shared";
 import { factorial } from "./calc.provider";
@@ -98,7 +94,7 @@ export class CalcEventHandler {
 
   async sendJobStartedEvent(jobId: string) {
     const startedAt = new Date();
-    const event = jsonEvent<CalcJobStartedEvent>({
+    const event = jsonEvent({
       type: CalcJobStartedEventType,
       data: {
         jobId,
@@ -110,7 +106,7 @@ export class CalcEventHandler {
 
   async sendJobFinishedEvent(jobId: string, output: number) {
     const finishedAt = new Date();
-    const event = jsonEvent<CalcJobFinishedEvent>({
+    const event = jsonEvent({
       type: CalcJobFinishedEventType,
       data: {
         jobId,

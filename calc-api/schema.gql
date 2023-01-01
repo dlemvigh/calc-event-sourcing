@@ -15,17 +15,19 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""Calculation result"""
-type CalcJobResultModel {
-  id: ID!
+type CalcJobModel {
+  id: String!
   input: Float!
-  output: Float!
+  output: Float
   status: CalcJobStatusModel!
 }
 
 type Query {
+  job(id: String!): CalcJobModel!
+  jobs: [CalcJobModel!]!
   status(id: String!): CalcJobStatusModel!
-  statuses: [CalcJobStatusModel!]!
-  result(id: String!): CalcJobResultModel!
-  results: [CalcJobResultModel!]!
+}
+
+type Mutation {
+  createJob(input: Float!): CalcJobModel!
 }
