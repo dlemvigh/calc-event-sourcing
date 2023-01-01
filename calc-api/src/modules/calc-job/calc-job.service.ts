@@ -7,7 +7,7 @@ import {
   // CalcJobRetryEvent,
   // CalcJobRetryEventType,
 } from 'calc-shared';
-import { EventStoreProvider } from '../eventstore/eventstore.provider';
+import { EventStoreProvider } from '../../common/eventstore/eventstore.provider';
 
 @Injectable()
 export class CalcJobService {

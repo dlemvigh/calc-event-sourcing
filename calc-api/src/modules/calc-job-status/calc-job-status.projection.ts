@@ -9,8 +9,8 @@ import {
   CalcJobCreatedEvent,
   CalcJobFinishedEvent,
 } from 'calc-shared';
-import { EventStoreProvider } from '../eventstore/eventstore.provider';
-import { PrismaService } from '../prisma/prisma.service';
+import { EventStoreProvider } from '../../common/eventstore/eventstore.provider';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 @Injectable()
 export class CalcJobStatusProjection {
@@ -41,6 +41,7 @@ export class CalcJobStatusProjection {
   }
 
   async handleEvent(event: CalcJobEvent) {
+    // console.log('handle event', event.type);
     switch (event.type) {
       case CalcJobCreatedEventType: {
         const { jobId, createdAt } = event.data as CalcJobCreatedEvent['data'];

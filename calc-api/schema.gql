@@ -1,0 +1,31 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Calculation result"""
+type CalcJobStatusModel {
+  id: ID!
+  createdAt: DateTime!
+  startedAt: DateTime
+  finishedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Calculation result"""
+type CalcJobResultModel {
+  id: ID!
+  input: Float!
+  output: Float!
+  status: CalcJobStatusModel!
+}
+
+type Query {
+  status(id: String!): CalcJobStatusModel!
+  statuses: [CalcJobStatusModel!]!
+  result(id: String!): CalcJobResultModel!
+  results: [CalcJobResultModel!]!
+}

@@ -15,7 +15,7 @@ import {
 import { CalcJobResult, CalcJobStatus } from '@prisma/client';
 import { IsNumber } from 'class-validator';
 import { v4 as uuid, NIL } from 'uuid';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 
 import { CalcJobService } from './calc-job.service';
 
