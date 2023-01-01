@@ -1,9 +1,13 @@
 import {
   EventStoreDBClient,
+  eventTypeFilter,
   EVENT_TYPE,
   excludeSystemEvents,
   jsonEvent,
+  PersistentSubscriptionExistsError,
+  persistentSubscriptionToAllSettingsFromDefaults,
   START,
+  streamNameFilter,
 } from "@eventstore/db-client";
 import {
   CalcJobCreatedEvent,
@@ -15,11 +19,46 @@ import {
 } from "calc-shared";
 import { factorial } from "./calc.provider";
 
+export const GROUP_NAME = "calc-workers";
+
 export class CalcEventHandler {
   constructor(private readonly eventstore: EventStoreDBClient) {}
 
-  async subscribe() {
-    const subscription = this.eventstore.subscribeToAll({
+  async createPersistantSubscription() {
+    await this.eventstore.createPersistentSubscriptionToAll(
+      GROUP_NAME,
+      persistentSubscriptionToAllSettingsFromDefaults({
+        startFrom: START,
+      }),
+      {
+        filter: eventTypeFilter({ prefixes: [CalcJobCreatedEventType] }),
+      }
+    );
+  }
+
+  async deletePersistantSubscription() {
+    await this.eventstore.deletePersistentSubscriptionToAll(GROUP_NAME);
+  }
+
+  async ensurePersistantSubscription() {
+    try {
+      await this.createPersistantSubscription();
+    } catch (e) {
+      if (e instanceof PersistentSubscriptionExistsError) {
+        // Subscription already exists
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  async dropCreatePersistantSubscription() {
+    await this.deletePersistantSubscription();
+    await this.createPersistantSubscription();
+  }
+
+  async catchupSubcription() {
+    return this.eventstore.subscribeToAll({
       fromPosition: START,
       filter: {
         filterOn: EVENT_TYPE,
@@ -27,6 +66,15 @@ export class CalcEventHandler {
         checkpointInterval: 1,
       },
     });
+  }
+
+  async persistantSubscription() {
+    return this.eventstore.subscribeToPersistentSubscriptionToAll(GROUP_NAME);
+  }
+
+  async subscribe() {
+    // const subscription = await this.catchupSubcription();
+    const subscription = await this.persistantSubscription();
 
     for await (const eventHandle of subscription) {
       console.log(
@@ -35,15 +83,17 @@ export class CalcEventHandler {
         eventHandle.event.data
       );
       await this.handleEvent(eventHandle?.event as any);
+      await subscription.ack(eventHandle);
+      console.log("ack");
     }
   }
 
   async handleEvent(event: CalcJobCreatedEvent): Promise<void> {
     const { jobId, input } = event.data;
 
-    await this.sendJobStartedEvent(jobId);
-    const output = factorial(input);
-    await this.sendJobFinishedEvent(jobId, Number(output));
+    // await this.sendJobStartedEvent(jobId);
+    // const output = factorial(input);
+    // await this.sendJobFinishedEvent(jobId, Number(output));
   }
 
   async sendJobStartedEvent(jobId: string) {

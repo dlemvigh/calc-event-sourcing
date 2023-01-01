@@ -1,4 +1,8 @@
-import { excludeSystemEvents, START } from '@eventstore/db-client';
+import {
+  eventTypeFilter,
+  excludeSystemEvents,
+  START,
+} from '@eventstore/db-client';
 import { Injectable } from '@nestjs/common';
 import {
   CalcJobCreatedEventType,
@@ -23,7 +27,13 @@ export class CalcJobStatusProjection {
   async subscribe() {
     const subscription = this.eventstore.client.subscribeToAll({
       fromPosition: START,
-      filter: excludeSystemEvents(),
+      filter: eventTypeFilter({
+        prefixes: [
+          CalcJobCreatedEventType,
+          CalcJobStartedEventType,
+          CalcJobFinishedEventType,
+        ],
+      }),
     });
 
     for await (const eventHandle of subscription) {
