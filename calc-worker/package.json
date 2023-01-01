@@ -10,7 +10,8 @@
     "start:dev": "nodemon src/main.ts"
   },
   "dependencies": {
-    "@eventstore/db-client": "^5.0.0"
+    "@eventstore/db-client": "^5.0.0",
+    "calc-shared": "link:../calc-shared"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

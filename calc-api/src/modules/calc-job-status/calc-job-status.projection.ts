@@ -5,7 +5,7 @@ import {
   CalcJobStartedEventType,
   CalcJobFinishedEventType,
   CalcJobEvent,
-} from '../../events/calc-job.events';
+} from 'calc-shared';
 import { EventStoreProvider } from '../eventstore/eventstore.provider';
 import { PrismaService } from '../prisma/prisma.service';
 

@@ -4,5 +4,8 @@
         "calc-api",
         "calc-worker",
         "calc-shared"
-    ]
+    ],
+    "dependencies": {
+        "calc-shared": "link:../calc-shared"
+    }
 }

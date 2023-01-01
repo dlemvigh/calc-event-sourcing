@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  calc-shared: link:../calc-shared
+
+dependencies:
+  calc-shared: link:../calc-shared
