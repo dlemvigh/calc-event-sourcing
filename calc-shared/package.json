@@ -7,8 +7,6 @@
   "main": "dist/events.js",
   "typings": "dist/events.d.ts",
   "scripts": {
-    "start": "ts-node src/main.ts",
-    "start:dev": "nodemon src/main.ts",
     "build": "tsc"
   },
   "dependencies": {

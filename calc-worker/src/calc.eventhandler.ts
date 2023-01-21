@@ -39,9 +39,11 @@ export class CalcEventHandler {
   async ensurePersistantSubscription() {
     try {
       await this.createPersistantSubscription();
+      console.log("event subscription created");
     } catch (e) {
       if (e instanceof PersistentSubscriptionExistsError) {
         // Subscription already exists
+        console.log("event subscription exists");
       } else {
         throw e;
       }
@@ -73,23 +75,22 @@ export class CalcEventHandler {
     const subscription = await this.persistantSubscription();
 
     for await (const eventHandle of subscription) {
-      // console.log(
-      //   "work handle",
-      //   eventHandle.event.type,
-      //   eventHandle.event.data
-      // );
       await this.handleEvent(eventHandle?.event as any);
       await subscription.ack(eventHandle);
-      // console.log("ack");
     }
   }
 
   async handleEvent(event: CalcJobCreatedEvent): Promise<void> {
     const { jobId, input } = event.data;
-
-    await this.sendJobStartedEvent(jobId);
+    console.log("received", event);
+    const jobStartedEvent = await this.sendJobStartedEvent(jobId);
+    console.log("sent", jobStartedEvent);
     const output = factorial(input);
-    await this.sendJobFinishedEvent(jobId, Number(output));
+    const jobFinishedEvent = await this.sendJobFinishedEvent(
+      jobId,
+      Number(output)
+    );
+    console.log("sent", jobFinishedEvent);
   }
 
   async sendJobStartedEvent(jobId: string) {

@@ -6,7 +6,7 @@ export class EventStoreProvider {
   public readonly client: EventStoreDBClient;
   constructor() {
     this.client = EventStoreDBClient.connectionString(
-      'esdb://localhost:2113?tls=false',
+      process.env.ESDB_CONNECTION_STRING || 'esdb://localhost:2113?tls=false',
     );
   }
 }

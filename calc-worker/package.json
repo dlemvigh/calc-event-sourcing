@@ -7,7 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "ts-node src/main.ts",
-    "start:dev": "nodemon src/main.ts"
+    "start:dev": "nodemon src/main.ts",
+    "start:prod": "node dist/main.js",
+    "build": "tsc"
   },
   "dependencies": {
     "@eventstore/db-client": "^5.0.0",

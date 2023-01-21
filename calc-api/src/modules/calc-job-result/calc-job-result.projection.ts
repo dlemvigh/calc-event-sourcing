@@ -1,5 +1,5 @@
 import { eventTypeFilter, START } from '@eventstore/db-client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   CalcJobCreatedEventType,
   CalcJobFinishedEventType,
@@ -12,6 +12,7 @@ import { PrismaService } from '../../common/prisma/prisma.service';
 
 @Injectable()
 export class CalcJobResultProjection {
+  private readonly logger = new Logger(CalcJobResultProjection.name);
   constructor(
     private readonly eventstore: EventStoreProvider,
     private readonly prisma: PrismaService,
@@ -35,7 +36,7 @@ export class CalcJobResultProjection {
   }
 
   async handleEvent(event: CalcJobEvent) {
-    // console.log('handle event', event.type);
+    this.logger.log('handle event', event.type);
     switch (event.type) {
       case CalcJobCreatedEventType: {
         const { jobId, input } = event.data as CalcJobCreatedEvent['data'];

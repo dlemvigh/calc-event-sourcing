@@ -1,10 +1,10 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 const PORT = Number(process.env.PORT) || 3000;
-
+const logger = new Logger('main');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -16,7 +16,7 @@ async function bootstrap() {
 
   await app.listen(PORT);
 
-  console.log(`Swagger http://localhost:${PORT}/api`);
-  console.log(`GraphQL http://localhost:${PORT}/graphql`);
+  logger.debug(`Swagger http://localhost:${PORT}/api`);
+  logger.debug(`GraphQL http://localhost:${PORT}/graphql`);
 }
 bootstrap();

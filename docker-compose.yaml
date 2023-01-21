@@ -22,6 +22,8 @@ services:
       - type: volume
         source: eventstore-volume-logs
         target: /c/data/eventstore/logs
+    networks:
+      - events
 
   pg.db:
     image: postgres:12.13-alpine
@@ -33,14 +35,46 @@ services:
       - pg-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    networks:
+      - db
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080  
+    networks:
+      - db
   
+  calc-shared:
+    build:
+      context: calc-shared
+
+  calc-api:
+    build:
+      context: calc-api
+    environment:
+      - DATABASE_URL=postgresql://root:example@calc-event-sourcing-pg.db-1:5432/mydb?schema=public
+      - ESDB_CONNECTION_STRING=esdb://calc-event-sourcing-eventstore.db-1:2113?tls=false
+    ports:
+      - 3000:3000
+    networks:
+      - db
+      - events
+
+  calc-worker:
+    build:
+      context: calc-worker
+    environment:
+      - ESDB_CONNECTION_STRING=esdb://calc-event-sourcing-eventstore.db-1:2113?tls=false
+    networks:
+      - events
+
 volumes:
   eventstore-volume-data:
   eventstore-volume-logs:
   pg-data:
+
+networks:
+  events:
+  db:
