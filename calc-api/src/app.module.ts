@@ -1,8 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { EventStoreModule } from './common/eventstore/eventstore.module';
-import { PrismaModule } from './common/prisma/prisma.module';
 import { CalcJobResultModule } from './modules/calc-job-result/calc-job-result.module';
 import { CalcJobStatusModule } from './modules/calc-job-status/calc-job-status.module';
 import { CalcJobModule } from './modules/calc-job/calc-job.module';
