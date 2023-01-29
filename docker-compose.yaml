@@ -42,7 +42,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080  
+      - 8084:8080  
     networks:
       - db
   
@@ -53,11 +53,14 @@ services:
   calc-api:
     build:
       context: calc-api
+    depends_on:
+      - pg.db
+      - eventstore.db
     environment:
       - DATABASE_URL=postgresql://root:example@calc-event-sourcing-pg.db-1:5432/mydb?schema=public
       - ESDB_CONNECTION_STRING=esdb://calc-event-sourcing-eventstore.db-1:2113?tls=false
     ports:
-      - 3000:3000
+      - 8081:3000
     networks:
       - db
       - events
@@ -65,6 +68,8 @@ services:
   calc-worker:
     build:
       context: calc-worker
+    depends_on:
+        - eventstore.db
     environment:
       - ESDB_CONNECTION_STRING=esdb://calc-event-sourcing-eventstore.db-1:2113?tls=false
     networks:
